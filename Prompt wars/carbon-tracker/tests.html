@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carbon Tracker - Security & Unit Tests</title>
+  <!-- Mocha CSS -->
+  <link href="https://unpkg.com/mocha@10.2.0/mocha.css" rel="stylesheet" />
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; }
+    #mocha { margin: 20px; }
+    #mocha-stats { color: #94a3b8; }
+    #mocha .test.pass::before { color: #10b981; }
+    #mocha .test.fail::before { color: #ef4444; }
+    #mocha h2, #mocha h1 { color: #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <!-- Setup Mocha and Chai -->
+  <script src="https://unpkg.com/chai@4.3.7/chai.js"></script>
+  <script src="https://unpkg.com/mocha@10.2.0/mocha.js"></script>
+  <script>
+    mocha.setup('bdd');
+    const expect = chai.expect;
+  </script>
+
+  <!-- Load Application Scripts -->
+  <script src="js/security.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/recommendations.js"></script>
+  <script src="js/gamification.js"></script>
+
+  <!-- Load and Run Tests -->
+  <script src="js/tests.js"></script>
+  <script>
+    mocha.run();
+  </script>
+</body>
+</html>

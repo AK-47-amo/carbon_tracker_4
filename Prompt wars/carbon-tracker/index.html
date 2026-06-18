@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Carbon Tracker — Your personal carbon footprint tracker. Log activities, get AI insights, set goals, and reduce your environmental impact.">
+  <meta name="theme-color" content="#10B981">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+  <title>Carbon Tracker — Your Eco Footprint Dashboard</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Carbon Tracker">
+  <meta property="og:description" content="Track, understand, and reduce your carbon footprint.">
+  <meta property="og:type" content="website">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" integrity="sha384-6DJvJjpYOFxFN+5fLhyx3phTf6TK6bNickOalRzV/UGAv8Cy4ILkBsfGT8FMkGD" crossorigin="anonymous"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+</head>
+
+<body>
+  <!-- Background Atmospheric Orbs -->
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+  </div>
+
+  <!-- Mobile Nav Backdrop -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" role="presentation"></div>
+
+  <!-- App Wrapper -->
+  <div id="app">
+
+    <!-- ═══ SIDEBAR NAVIGATION ══════════════════════════════════════════════ -->
+    <nav class="sidebar" role="navigation" aria-label="Main navigation">
+
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <div class="logo-icon" aria-hidden="true">🌿</div>
+        <div>
+          <div class="logo-text">CarbonTrack</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 1px; white-space: nowrap;">Eco Footprint Dashboard</div>
+        </div>
+      </div>
+
+      <!-- Navigation Items -->
+      <div class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <button class="nav-item" data-page="dashboard" id="nav-dashboard">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top: 8px;">Track</div>
+        <button class="nav-item" data-page="tracker" id="nav-tracker">
+          <span class="nav-icon">➕</span>
+          <span>Activity Tracker</span>
+        </button>
+        <button class="nav-item" data-page="insights" id="nav-insights">
+          <span class="nav-icon">🔍</span>
+          <span>Insights & Tips</span>
+          <span class="nav-badge">AI</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top: 8px;">Goals</div>
+        <button class="nav-item" data-page="action-plan" id="nav-action-plan">
+          <span class="nav-icon">🎯</span>
+          <span>Action Plan</span>
+        </button>
+        <button class="nav-item" data-page="progress" id="nav-progress">
+          <span class="nav-icon">📊</span>
+          <span>Progress</span>
+        </button>
+
+        <div class="nav-section-label" style="margin-top: 8px;">Social</div>
+        <button class="nav-item" data-page="gamification" id="nav-gamification">
+          <span class="nav-icon">🏆</span>
+          <span>Achievements</span>
+        </button>
+        <button class="nav-item" data-page="community" id="nav-community">
+          <span class="nav-icon">👥</span>
+          <span>Community</span>
+        </button>
+        <button class="nav-item" data-page="education" id="nav-education">
+          <span class="nav-icon">📚</span>
+          <span>Learn</span>
+        </button>
+      </div>
+
+      <!-- User Profile -->
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sidebar-user-avatar">🌿</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Loading...</div>
+          <div class="user-level" id="sidebar-user-level">Level 1</div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ════════════════════════════════════════════════════ -->
+    <div class="main-content">
+
+      <!-- Top Header Bar -->
+      <header class="top-header" role="banner">
+        <div class="flex items-center gap-4">
+          <button class="mobile-nav-toggle btn btn-ghost btn-icon" id="mobile-menu-btn"
+            aria-label="Toggle navigation" aria-expanded="false">
+            ☰
+          </button>
+          <div>
+            <div class="page-title" id="page-title">Dashboard</div>
+            <div class="page-subtitle" id="page-subtitle">Your carbon journey at a glance</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <!-- Eco Status Chip -->
+          <div class="chip" style="cursor: default;">
+            <span style="color: var(--clr-primary);">🌱</span>
+            <span style="font-size: 12px; font-weight: 700; color: var(--clr-primary);" id="header-streak">0</span>
+            <span style="font-size: 12px; color: var(--text-muted);">day streak</span>
+          </div>
+          <!-- Points chip -->
+          <div class="chip" style="cursor: default;">
+            <span>⭐</span>
+            <span style="font-size: 12px; font-weight: 700; color: var(--clr-lime);" id="header-points">0</span>
+            <span style="font-size: 12px; color: var(--text-muted);">pts</span>
+          </div>
+          <!-- Settings -->
+          <button class="btn btn-ghost btn-icon" id="settings-btn" aria-label="Settings">
+            ⚙️
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Views -->
+      <main role="main">
+
+        <!-- Dashboard -->
+        <section class="page-view" id="page-dashboard" aria-label="Dashboard">
+        </section>
+
+        <!-- Activity Tracker -->
+        <section class="page-view" id="page-tracker" aria-label="Activity Tracker">
+        </section>
+
+        <!-- Insights -->
+        <section class="page-view" id="page-insights" aria-label="Insights and Recommendations">
+        </section>
+
+        <!-- Action Plan -->
+        <section class="page-view" id="page-action-plan" aria-label="Action Plan">
+        </section>
+
+        <!-- Progress -->
+        <section class="page-view" id="page-progress" aria-label="Progress and Analytics">
+        </section>
+
+        <!-- Gamification -->
+        <section class="page-view" id="page-gamification" aria-label="Achievements and Gamification">
+        </section>
+
+        <!-- Community -->
+        <section class="page-view" id="page-community" aria-label="Community">
+        </section>
+
+        <!-- Education -->
+        <section class="page-view" id="page-education" aria-label="Educational Resources">
+        </section>
+
+      </main>
+
+      <!-- Floating Action Button -->
+      <button class="fab" id="fab-log" aria-label="Log new activity" title="Log Activity">
+        ➕
+      </button>
+
+    </div><!-- /main-content -->
+  </div><!-- /app -->
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" role="alert" aria-live="polite"></div>
+
+  <!-- JavaScript Modules (order matters) -->
+  <script src="js/security.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/recommendations.js"></script>
+  <script src="js/gamification.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Sync header stats with state -->
+  <script>
+    // Update header streak/points on state load
+    function syncHeaderStats() {
+      if (typeof state !== 'undefined') {
+        const streakEl  = document.getElementById('header-streak');
+        const pointsEl  = document.getElementById('header-points');
+        if (streakEl)  streakEl.textContent  = state.user.streak || 0;
+        if (pointsEl)  pointsEl.textContent  = state.user.points || 0;
+      }
+      setTimeout(syncHeaderStats, 2000);
+    }
+    document.addEventListener('DOMContentLoaded', () => setTimeout(syncHeaderStats, 500));
+  </script>
+</body>
+</html>
